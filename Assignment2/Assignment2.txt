@@ -1,0 +1,105 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1265\cocoasubrtf210
+{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red58\green62\blue68;}
+\margl1440\margr1440\vieww19680\viewh11260\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs28 \cf0 \CocoaLigature0 Assignment2\
+Databse: movielens\
+Scema:\
+		u_data(user_id, movie_id,rating, timestamps)\
+		u_user(user_id, age, gender, occupation, zip_code)\
+\
+\
+<q1> Find the user id who has rated the most number of movies.\
+\
+HiveQL:\
+select user_id, COUNT(*) as movie_id \
+from movielens.u_data \
+group by user_id \
+order by movie_id desc\
+limit 5;\
+\
+Result:\
+
+\fs22 405	737\
+655	685\
+13	636\
+450	540\
+276	518
+\fs28 \
+\
+<q2>Find average rating  received by movie with id 178.\
+\
+HiveQL:\
+select AVG(rating) from movielens.u_data where movie_id = 178;\
+\
+Result:\
+
+\fs22 4.344
+\fs28 \
+\
+<q3>The users belonging to which 3 occupations provided the most number of ratings.\
+\
+HiveQL:\
+\pard\pardeftab720\ri720
+\cf2 \CocoaLigature1 create table movielens.occupation_rating as\
+\pard\tx8991\pardeftab720\ri331
+\cf2 select S.user_id, T.occupation, S.rating \
+from movielens.u_data as S JOIN movielens.u_user as T\
+ON S.user_id=T.user_id;\
+\pard\pardeftab720\ri720
+\cf2 \
+select occupation, COUNT(*) as rating \
+from movielens.occupation_rating \
+group by occupation\
+order by rating desc\
+limit 3;\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \CocoaLigature0 Result:\
+
+\fs22 student	21957\
+other	10663\
+educator	9442
+\fs28 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural
+\cf0 \
+OR\
+[\cf2 \CocoaLigature1 select occupation, COUNT(*) as rating \
+\pard\pardeftab720\ri720
+\cf2 from (select S.user_id, T.occupation, S.rating \
+\pard\tx8991\pardeftab720\ri331
+\cf2 from movielens.u_data as S JOIN movielens.u_user as T\
+ON S.user_id=T.user_id) as occupation_rating\
+\pard\pardeftab720\ri720
+\cf2 group by occupation\
+order by rating desc\
+limit 3;\cf0 \CocoaLigature0 ]\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural
+\cf0 \
+<q4>How many unique male users provided at least one rating of 5.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 HiveQL:\
+\pard\pardeftab720
+\cf2 \expnd0\expndtw0\kerning0
+\CocoaLigature1 create table movielens.male_rating as select S.user_id, T.gender, S.rating\
+from movielens.u_data as S JOIN movielens.u_user as T \
+ON S.user_id = T.user_id;\
+\
+select count(distinct(user_id)) as rating \
+from movielens.male_rating \
+where   gender = 'M' and rating = '5';\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \kerning1\expnd0\expndtw0 \CocoaLigature0 Result:\cf2 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+
+\fs22 \cf0 \kerning1\expnd0\expndtw0 \CocoaLigature0 657
+\fs28 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \
+}
